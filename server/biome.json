@@ -7,13 +7,15 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"ignore": []
+        "ignore": ["node_modules/**"]
 	},
 	"formatter": {
 		"enabled": true,
 		"indentStyle": "space",
 		"indentWidth": 2,
-		"lineWidth": 80
+		"lineWidth": 80,
+		"bracketSpacing":true,
+		"attributePosition": "auto"
 	},
 	"organizeImports": {
 		"enabled": true
@@ -30,7 +32,10 @@
 			"semicolons": "asNeeded",
 			"arrowParentheses": "asNeeded",
 			"jsxQuoteStyle": "double",
-			"trailingCommas": "es5"
+			"trailingCommas": "es5",
+			"attributePosition": "auto",
+			"quoteProperties":"preserve",
+			"indentWidth": 2
 		}
 	}
 }
