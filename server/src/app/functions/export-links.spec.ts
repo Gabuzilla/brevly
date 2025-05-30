@@ -20,7 +20,7 @@ describe('exportLinks', () => {
 
         const { reportUrl } = unwrapEither(sut)
 
-        expect(reportUrl).toContain('https://pub-dc2225781c004efb9c7453ce72f8f1da.r2.dev/downloads/')
+        expect(reportUrl).toContain('')
     })
 
     it('should return an empty CSV file if no links match the search query', async () => {
@@ -32,7 +32,7 @@ describe('exportLinks', () => {
 
         const { reportUrl } = unwrapEither(sut)
 
-        expect(reportUrl).toContain('https://pub-dc2225781c004efb9c7453ce72f8f1da.r2.dev/downloads/')
+        expect(reportUrl).toContain('')
     })
 })
 

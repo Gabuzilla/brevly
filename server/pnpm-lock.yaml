@@ -34,7 +34,7 @@ importers:
         version: 1.11.13
       drizzle-orm:
         specifier: ^0.38.2
-        version: 0.38.4(postgres@3.4.7)
+        version: 0.38.4(postgres@3.4.7)(react@19.1.0)
       fastify:
         specifier: ^5.2.0
         version: 5.3.3
@@ -44,6 +44,9 @@ importers:
       postgres:
         specifier: ^3.4.5
         version: 3.4.7
+      react-hook-form:
+        specifier: ^7.56.4
+        version: 7.56.4(react@19.1.0)
       uuidv7:
         specifier: ^1.0.2
         version: 1.0.2
@@ -1898,6 +1901,16 @@ packages:
   quick-format-unescaped@4.0.4:
     resolution: {integrity: sha512-tYC1Q1hgyRuHgloV/YXs2w15unPVh8qfu/qCTfhTYamaw7fyhumKa2yGpdSo87vY32rIclj+4fWYQXUMs9EHvg==}
 
+  react-hook-form@7.56.4:
+    resolution: {integrity: sha512-Rob7Ftz2vyZ/ZGsQZPaRdIefkgOSrQSPXfqBdvOPwJfoGnjwRJUs7EM7Kc1mcoDv3NOtqBzPGbcMB8CGn9CKgw==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      react: ^16.8.0 || ^17 || ^18 || ^19
+
+  react@19.1.0:
+    resolution: {integrity: sha512-FS+XFBNvn3GTAWq26joslQgWNoFu08F4kl0J4CgdNKADkdSGXQyTCnKteIAJy96Br6YbpEU1LSzV5dYtjMkMDg==}
+    engines: {node: '>=0.10.0'}
+
   readable-stream@3.6.2:
     resolution: {integrity: sha512-9u/sniCrY3D5WdsERHzHE4G2YCXqoG5FTHUiCC4SIbr6XcLZBY05ya9EKjYek9O5xOAwjGq+1JdGBAS7Q9ScoA==}
     engines: {node: '>= 6'}
@@ -3746,9 +3759,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.38.4(postgres@3.4.7):
+  drizzle-orm@0.38.4(postgres@3.4.7)(react@19.1.0):
     optionalDependencies:
       postgres: 3.4.7
+      react: 19.1.0
 
   eastasianwidth@0.2.0: {}
 
@@ -4185,6 +4199,12 @@ snapshots:
   punycode@2.3.1: {}
 
   quick-format-unescaped@4.0.4: {}
+
+  react-hook-form@7.56.4(react@19.1.0):
+    dependencies:
+      react: 19.1.0
+
+  react@19.1.0: {}
 
   readable-stream@3.6.2:
     dependencies:

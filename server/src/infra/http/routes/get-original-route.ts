@@ -57,7 +57,7 @@ export const getOriginalUrlRoute: FastifyPluginAsyncZod = async server => {
 
       const { originalUrl } = unwrapEither(getResult)
 
-      return reply.status(200).send({ message: originalUrl })
+      return reply.status(200).send({ message: originalUrl }) 
     }
   )
 }

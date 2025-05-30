@@ -1,29 +1,29 @@
-import { PassThrough } from 'node:stream'
-import { pipeline } from 'node:stream/promises'
-import { db, pg } from '@/infra/db'
-import { schema } from '@/infra/db/schemas'
-import { type Either, makeRight } from '@/infra/shared/either'
-import { uploadFileToStorage } from '@/infra/storage/upload-file-to-storage'
-import { stringify } from 'csv-stringify'
-import { ilike } from 'drizzle-orm'
-import { z } from 'zod'
+import { Readable, PassThrough } from 'node:stream';
+import { pipeline } from 'node:stream/promises';
+import { db } from '@/infra/db';
+import { schema } from '@/infra/db/schemas';
+import { type Either, makeRight } from '@/infra/shared/either';
+import { uploadFileToStorage } from '@/infra/storage/upload-file-to-storage';
+import { stringify } from 'csv-stringify';
+import { ilike } from 'drizzle-orm';
+import { z } from 'zod';
 
 const exportLinksInput = z.object({
   searchQuery: z.string().optional(),
-})
+});
 
-type ExportLinksInput = z.input<typeof exportLinksInput>
+type ExportLinksInput = z.input<typeof exportLinksInput>;
 
 type ExportLinksOutput = {
-  reportUrl: string
-}
+  reportUrl: string;
+};
 
 export async function exportLinks(
   input: ExportLinksInput
 ): Promise<Either<never, ExportLinksOutput>> {
-  const { searchQuery } = exportLinksInput.parse(input)
+  const { searchQuery } = exportLinksInput.parse(input);
 
-  const { sql, params } = db
+  const linksData = await db
     .select({
       original_url: schema.links.originalUrl,
       short_url: schema.links.shortUrl,
@@ -33,10 +33,9 @@ export async function exportLinks(
     .from(schema.links)
     .where(
       searchQuery ? ilike(schema.links.shortUrl, `%${searchQuery}%`) : undefined
-    )
-    .toSQL()
-
-  const pgCursorStream = pg.unsafe(sql, params as string[]).cursor(2)
+    );
+  
+  const dataStream = Readable.from(linksData);
 
   const csvStream = stringify({
     delimiter: ',',
@@ -47,20 +46,19 @@ export async function exportLinks(
       { key: 'access_count', header: 'Access Count' },
       { key: 'created_at', header: 'Created At' },
     ],
-  })
+  });
 
-  const uploadToStoragePassThrough = new PassThrough()
-
+  const uploadToStoragePassThrough = new PassThrough();
   const uploadPromise = uploadFileToStorage({
     contentType: 'text/csv',
     folder: 'downloads',
     fileName: `${new Date().toISOString()}-links.csv`,
     contentStream: uploadToStoragePassThrough,
-  })
+  });
 
-  await pipeline(pgCursorStream, csvStream, uploadToStoragePassThrough)
+  await pipeline(dataStream, csvStream, uploadToStoragePassThrough);
 
-  const { url } = await uploadPromise
+  const { url } = await uploadPromise;
 
-  return makeRight({ reportUrl: url })
+  return makeRight({ reportUrl: url });
 }
