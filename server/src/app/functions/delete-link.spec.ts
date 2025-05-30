@@ -3,14 +3,18 @@ import { db } from '@/infra/db'
 import { schema } from '@/infra/db/schemas'
 import { isLeft, isRight, unwrapEither } from '@/infra/shared/either'
 import { eq } from 'drizzle-orm'
-import { describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 import { makeLink } from '@/test/factories/make-link'
 import { deleteLink } from './delete-link'
 import { LinkNotFoundError } from './errors/link-not-found'
 
 describe('deleteLink', () => {
+  beforeEach(async () => {
+    await db.delete(schema.links)
+  })
+
   it('should delete an existing short link', async () => {
-    const existingLink = await makeLink()
+    const existingLink = await makeLink() 
 
     const result = await deleteLink({ shortUrl: existingLink.shortUrl })
 

@@ -1,4 +1,4 @@
-import { PassThrough, Transform } from 'node:stream'
+import { PassThrough } from 'node:stream'
 import { pipeline } from 'node:stream/promises'
 import { db, pg } from '@/infra/db'
 import { schema } from '@/infra/db/schemas'
@@ -25,11 +25,10 @@ export async function exportLinks(
 
   const { sql, params } = db
     .select({
-      id: schema.links.id,
-      originalUrl: schema.links.originalUrl,
-      shortUrl: schema.links.shortUrl,
-      accessCount: schema.links.accessCount,
-      createdAt: schema.links.createdAt,
+      original_url: schema.links.originalUrl,
+      short_url: schema.links.shortUrl,
+      access_count: schema.links.accessCount,
+      created_at: schema.links.createdAt,
     })
     .from(schema.links)
     .where(
@@ -37,9 +36,9 @@ export async function exportLinks(
     )
     .toSQL()
 
-  const cursor = pg.unsafe(sql, params as string[]).cursor(2)
+  const pgCursorStream = pg.unsafe(sql, params as string[]).cursor(2)
 
-  const csv = stringify({
+  const csvStream = stringify({
     delimiter: ',',
     header: true,
     columns: [
@@ -50,31 +49,18 @@ export async function exportLinks(
     ],
   })
 
-  const uploadToStorageStream = new PassThrough()
+  const uploadToStoragePassThrough = new PassThrough()
 
-  const convertToCSVPipeline = pipeline(
-    cursor,
-    new Transform({
-      objectMode: true,
-      transform(chunks: unknown[], encoding, callback) {
-        for (const chunk of chunks) {
-          this.push(chunk)
-        }
-        callback()
-      },
-    }),
-    csv,
-    uploadToStorageStream
-  )
-
-  const uploadToStorage = uploadFileToStorage({
+  const uploadPromise = uploadFileToStorage({
     contentType: 'text/csv',
     folder: 'downloads',
     fileName: `${new Date().toISOString()}-links.csv`,
-    contentStream: uploadToStorageStream,
+    contentStream: uploadToStoragePassThrough,
   })
 
-  const [{ url }] = await Promise.all([uploadToStorage, convertToCSVPipeline])
+  await pipeline(pgCursorStream, csvStream, uploadToStoragePassThrough)
+
+  const { url } = await uploadPromise
 
   return makeRight({ reportUrl: url })
 }

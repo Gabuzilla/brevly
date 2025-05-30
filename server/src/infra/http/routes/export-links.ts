@@ -8,6 +8,7 @@ export const exportLinksRoute: FastifyPluginAsyncZod = async server => {
     '/links/exports',
     {
       schema: {
+        tags: ['Links'],
         summary: 'Export links',
         querystring: z.object({
           searchQuery: z.string().optional(),

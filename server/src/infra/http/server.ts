@@ -10,10 +10,12 @@ import {
   serializerCompiler,
   validatorCompiler,
 } from 'fastify-type-provider-zod'
-import { postLinkRoute } from './routes/post-link'
 import { deleteLinkRoute } from './routes/delete-link'
-import { getOriginalUrlRoute } from './routes/get-original-route'
 import { exportLinksRoute } from './routes/export-links'
+import { getAllLinksRoute } from './routes/get-all-links'
+import { getOriginalUrlRoute } from './routes/get-original-route'
+import { incrementLinkAccessRoute } from './routes/increment-link-access'
+import { postLinkRoute } from './routes/post-link'
 
 const server = fastify()
 
@@ -50,11 +52,12 @@ server.register(fastifySwaggerUi, {
   routePrefix: '/docs',
 })
 
-
 server.register(postLinkRoute)
 server.register(deleteLinkRoute)
 server.register(getOriginalUrlRoute)
 server.register(exportLinksRoute)
+server.register(incrementLinkAccessRoute)
+server.register(getAllLinksRoute)
 
 server.listen({ port: 3333, host: '0.0.0.0' }).then(() => {
   console.log('HTTP Server running!')

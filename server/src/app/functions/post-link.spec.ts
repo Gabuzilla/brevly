@@ -5,11 +5,15 @@ import { schema } from '@/infra/db/schemas'
 import { isLeft, isRight, unwrapEither } from '@/infra/shared/either'
 import { fakerPT_BR as faker } from '@faker-js/faker'
 import { eq } from 'drizzle-orm'
-import { describe, expect, it } from 'vitest'
-import { createLink } from './post-link'
+import { beforeEach, describe, expect, it } from 'vitest'
 import { makeLink } from '@/test/factories/make-link'
 
+import { createLink } from './post-link'
+
 describe('createLink', () => {
+  beforeEach(async () => {
+    await db.delete(schema.links)
+  })
   it('should be able to create a new short link', async () => {
     const originalUrl = faker.internet.url()
     const shortUrl = faker.string.alphanumeric(8)

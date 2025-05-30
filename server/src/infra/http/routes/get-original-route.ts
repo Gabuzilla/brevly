@@ -1,9 +1,9 @@
+import { LinkNotFoundError } from '@/app/functions/errors/link-not-found'
+import { ZodGenericError } from '@/app/functions/errors/zod-error'
+import { getOriginalUrl } from '@/app/functions/get-original-url'
 import { isLeft, unwrapEither } from '@/infra/shared/either'
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { z } from 'zod'
-import { LinkNotFoundError } from '@/app/functions/errors/link-not-found'
-import { ZodGenericError } from '@/app/functions/errors/zod-error'
-import { getOriginalUrl } from '@/app/functions/get-original-route'
 
 export const getOriginalUrlRoute: FastifyPluginAsyncZod = async server => {
   server.get(
@@ -57,8 +57,7 @@ export const getOriginalUrlRoute: FastifyPluginAsyncZod = async server => {
 
       const { originalUrl } = unwrapEither(getResult)
 
-    
-      return reply.redirect(originalUrl)
+      return reply.status(200).send({ message: originalUrl })
     }
   )
 }
