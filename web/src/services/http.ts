@@ -34,7 +34,7 @@ class AxiosHttpClient implements HttpClient {
     }
 }
 
-export const API_BASE_URL = 'http://localhost:3333';
+export const API_BASE_URL = process.env.API_BASE_URL || 'http://localhost:3333';
 const httpClient = new AxiosHttpClient(API_BASE_URL);
 
 export class LinkService implements ILinkService {

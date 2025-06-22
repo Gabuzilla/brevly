@@ -22,11 +22,6 @@ export function RedirectPage() {
             const linkData = await linkService.getLink(shortUrl);
             const originalUrl = linkData.originalUrl;
 
-            linkService.incrementLinkAccess(shortUrl).catch(err => {
-                console.error('RedirectPage: Erro ao incrementar acesso (continuando com o redirecionamento):', err);
-                toast.warn('Não foi possível registrar o acesso, mas redirecionando...');
-            });
-
             console.log(`RedirectPage: Redirecionando para: ${originalUrl}`);
             setTimeout(() => {
                 window.location.replace(originalUrl);

@@ -50,7 +50,10 @@ export const LinkRow = ({
                 >
                     {fullShortenedUrlFrontend}
                 </p>
-                <p className='truncate text-sm text-gray-500'>{originalUrl}</p>
+                <p className='truncate text-sm text-gray-500'>  {originalUrl.length > 35
+                    ? `${originalUrl.substring(0, 35)}...`
+                    : originalUrl
+                }</p>
             </div>
             <div className='flex items-center gap-5'>
                 <div>

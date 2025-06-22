@@ -34,11 +34,6 @@ export async function getOriginalUrl(
       return makeLeft(new LinkNotFoundError(shortUrl))
     }
 
-    await db
-      .update(schema.links)
-      .set({ accessCount: (link.accessCount ?? 0) + 1 })
-      .where(eq(schema.links.shortUrl, shortUrl))
-
     return makeRight(link)
   } catch (error) {
     if (error instanceof z.ZodError) {

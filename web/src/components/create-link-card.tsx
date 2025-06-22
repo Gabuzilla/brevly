@@ -30,7 +30,7 @@ export const CreateLinkCard = ({ refetch }: CreateLinkCardProps) => {
         clearErrors();
 
         let hasError = false;
-        const urlRegex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
+        const urlRegex = /^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/;
         if (!data.originalUrl || !data.originalUrl.trim()) {
             setError('originalUrl', { type: 'manual', message: 'A URL original é obrigatória.' });
             hasError = true;
